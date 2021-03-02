@@ -38,12 +38,22 @@ static ssize_t read(struct file *file, char __user *buffer, size_t bufLen, loff_
 {
     /* numero di byte letti */
     size_t to_transfer;
-    const char* test = "panino\n";
+    char test[40] = "panino\n";
     int err;
+    void *CR3;
 
     if (*(int*)file->private_data != 0) /* se ha già letto non fa nulla */
         return 0;
     *(int*)file->private_data = 1; /* marca il file come letto */
+
+    asm ("mov %%cr3, %%rax\n\t"
+        "mov %%rax, %0"
+        : "=r" (CR3)
+        : /* no input */
+        : "%rax" /* sporca rax e il compilatore deve deve saperlo */
+    );
+    /* trasforma in  */
+    snprintf(test, 40, "0x%p\n", CR3);
 
     /* quanti bute trasferire */
     to_transfer = MIN(strlen(test), bufLen);
