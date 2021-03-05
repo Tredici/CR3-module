@@ -1,11 +1,11 @@
 /* da includere obbligatoriamente nel codice di un modulo */
 #include <linux/module.h>
 #include <linux/kernel.h>
-#include <linux/init.h> /* module_init */
+#include <linux/init.h>         /* module_init */
 #include <linux/miscdevice.h>
-#include <linux/fs.h> /* per struct file_operations */
-#include <linux/string.h>
-#include <linux/slab.h> /* per kmalloc */
+#include <linux/fs.h>           /* per struct file_operations */
+#include <linux/string.h>       /* per snprintf */
+#include <linux/slab.h>         /* per kmalloc */
 
 /* licenza */
 MODULE_LICENSE("GPL");
@@ -55,7 +55,7 @@ static ssize_t read(struct file *file, char __user *buffer, size_t bufLen, loff_
     /* trasforma in  */
     snprintf(test, 40, "0x%p\n", CR3);
 
-    /* quanti bute trasferire */
+    /* quanti byte trasferire */
     to_transfer = MIN(strlen(test), bufLen);
 
     err = copy_to_user(buffer, test, to_transfer);
